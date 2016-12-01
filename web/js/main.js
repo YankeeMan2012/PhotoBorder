@@ -9,6 +9,7 @@ let AppJS = {
         imgH: 100,
         imgL: 0,
         imgT: 0,
+        imgA: 0,
     },
 
     init: function () {
@@ -24,9 +25,13 @@ let AppJS = {
         let photoBorder     = document.getElementById('photoBorder');
         let plus            = document.querySelector('.js-plus');
         let minus           = document.querySelector('.js-minus');
+        let clockwise       = document.querySelector('.js-clockwise');
+        let anticlockwise   = document.querySelector('.js-anticlockwise');
         photoBorder.onmousedown     = function (e){ AppJS.startMoving(e, this); };
         plus.onclick                = function () { AppJS.scaling('plus'); };
         minus.onclick               = function () { AppJS.scaling('minus'); };
+        clockwise.onclick           = function () { AppJS.rotating('clockwise'); };
+        anticlockwise.onclick       = function () { AppJS.rotating('anticlockwise'); };
     },
 
     scaling: function (sign) {
@@ -38,6 +43,15 @@ let AppJS = {
             AppJS.params.imgH -= 10;
         }
         AppJS.renderCanvas();
+    },
+
+    rotating: function (sign) {
+        if (sign === 'clockwise') {
+            AppJS.params.imgA += 1;
+        } else if (sign === 'anticlockwise') {
+            AppJS.params.imgA -= 1;
+        }
+        AppJS.renderCanvas(false, 'rotate');
     },
 
     startMoving: function (e, border) {
@@ -71,25 +85,47 @@ let AppJS = {
         let translateX = left - startL;
         let translateY = top  - startT;
 
-        AppJS.params.imgL = imgStartL + translateX;
-        AppJS.params.imgT = imgStartT + translateY;
-        AppJS.renderCanvas();
+        console.log(imgStartL, imgStartT);
+
+        // AppJS.params.imgL = imgStartL + translateX;
+        // AppJS.params.imgT = imgStartT + translateY;
+        // console.log(translateX, translateY);
+
+        // AppJS.params.imgOldL = translateX;
+        // AppJS.params.imgOldT = translateY;
+
+        AppJS.params.imgL = AppJS.params.X - AppJS.params.imgL;
+        AppJS.params.imgT = AppJS.params.Y - AppJS.params.imgT;
+
+        AppJS.params.X = translateX;
+        AppJS.params.Y = translateY;
+
+        AppJS.renderCanvas('translate', false);
     },
 
-    renderCanvas: function () {
+    renderCanvas: function (translate, rotate) {
         let photoBorder = document.getElementById('photoBorder');
         let ctx = photoBorder.getContext('2d');
 
         let rectW = AppJS.params.imgW;
         let rectH = AppJS.params.imgH;
 
-        let rectL = AppJS.params.imgL;
-        let rectT = AppJS.params.imgT;
+        // let rectL = AppJS.params.imgL - rectW / 2;
+        // let rectT = AppJS.params.imgT - rectH / 2;
 
         ctx.clearRect(0, 0, photoBorder.width, photoBorder.height);
 
+        if (translate === 'translate') {
+            ctx.translate(AppJS.params.imgL, AppJS.params.imgT);
+        }
+
+        if (rotate === 'rotate') {
+            ctx.rotate(AppJS.params.imgA * Math.PI / 180);
+        }
+
         ctx.fillStyle = 'red';
-        ctx.fillRect(rectL - rectW / 2, rectT - rectH / 2, rectW, rectH);
+        // ctx.fillRect(rectL, rectT, rectW, rectH);
+        ctx.fillRect(photoBorder.width / 2 - rectW / 2, photoBorder.height / 2 - rectH / 2, rectW, rectH);
     },
 };
 
