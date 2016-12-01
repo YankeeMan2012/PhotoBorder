@@ -1,0 +1,17 @@
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 20px;
+  }
+}
+
+canvas {
+  margin: 50px auto;
+  display: block;
+  border: 1px solid red;
+}
