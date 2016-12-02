@@ -129,6 +129,9 @@ let AppJS = {
             }
 
             ctx.drawImage(photo, rectL, rectT, AppJS.params.imgW, AppJS.params.imgH);
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(200, 400, 100, 50);
         };
 
         photo.src = "img/1.jpg";
