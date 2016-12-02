@@ -4,6 +4,7 @@ window.onload  = function () {
 
 let AppJS = {
     params: {
+        imgSrc: '',
         imgW: 500,
         imgH: 500,
         imgL: 0,
@@ -26,11 +27,22 @@ let AppJS = {
         let minus                   = document.querySelector('.js-minus');
         let clockwise               = document.querySelector('.js-clockwise');
         let anticlockwise           = document.querySelector('.js-anticlockwise');
+        let photo                   = document.querySelector('.js-file');
         canvas.onmousedown          = function (e){ AppJS.startMoving(e, this); };
         plus.onclick                = function () { AppJS.scaling('plus'); };
         minus.onclick               = function () { AppJS.scaling('minus'); };
         clockwise.onclick           = function () { AppJS.rotating('clockwise'); };
         anticlockwise.onclick       = function () { AppJS.rotating('anticlockwise'); };
+        photo.onchange              = function (e){ AppJS.loadImg(e, this); };
+    },
+
+    loadImg: function (e, file) {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            AppJS.params.imgSrc = event.target.result;
+            AppJS.renderCanvas('init');
+        };
+        reader.readAsDataURL(file.files[0]);
     },
 
     initParams: function () {
@@ -94,13 +106,10 @@ let AppJS = {
         let top  = e.offsetY;
         let imgStartL = start.imgLStart;
         let imgStartT = start.imgTStart;
-
         let translateX = left - startL;
         let translateY = top  - startT;
-
         AppJS.params.imgL = translateX + imgStartL;
         AppJS.params.imgT = translateY + imgStartT;
-
         AppJS.renderCanvas();
     },
 
@@ -114,38 +123,38 @@ let AppJS = {
         let rectL = AppJS.params.imgL;
         let rectT = AppJS.params.imgT;
 
-        if (rotateA !== false) {
-            ctx.rotate(rotateA * Math.PI / 180);
-        }
+        // if (rotateA !== false) {
+        //     ctx.rotate(rotateA * Math.PI / 180);
+        // }
 
         let photo = new Image();
         photo.onload = function() {
             ctx.clearRect(0, 0, cW, cH);
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, cW, cH);
-
+            // ctx.fillStyle = '#fff';
+            // ctx.fillRect(0, 0, cW, cH);
             if (isInit === 'init') {
                 AppJS.calcParams(photo, cW, cH);
             }
-
             ctx.drawImage(photo, rectL, rectT, AppJS.params.imgW, AppJS.params.imgH);
 
             ctx.fillStyle = '#000';
             ctx.fillRect(200, 400, 100, 50);
         };
+        photo.src = AppJS.params.imgSrc;
 
-        photo.src = "img/1.jpg";
-
+        let border = new Image();
+        border.onload = function() {
+            ctx.drawImage(border, 0, 0, cW, cH);
+        };
+        border.src = "img/border.png";
         AppJS.saveImg(canvas);
     },
 
     calcParams: function (photo, cW, cH) {
         let width =  photo.width;
         let height = photo.height;
-
         let wProp = width  / cW;
         let hProp = height / cH;
-
         if (wProp > hProp) {
             AppJS.params.imgW = cW;
             AppJS.params.imgH = height * cW / width;
