@@ -70,4 +70,5 @@ table {
 canvas {
   margin: 10px auto;
   display: block;
-  border: 1px solid red; }
+  border: 1px solid red;
+  cursor: move; }

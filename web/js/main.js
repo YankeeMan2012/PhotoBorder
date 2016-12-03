@@ -4,7 +4,7 @@ window.onload  = function () {
 
 let AppJS = {
     params: {
-        imgSrc: '',
+        imgSrc: 'img/emptyImg.jpg',
         imgW: 500,
         imgH: 500,
         imgL: 0,
@@ -16,7 +16,6 @@ let AppJS = {
     },
 
     ready: function () {
-        AppJS.initParams();
         AppJS.handlers();
         AppJS.renderCanvas('init');
     },
@@ -45,12 +44,6 @@ let AppJS = {
         reader.readAsDataURL(file.files[0]);
     },
 
-    initParams: function () {
-        let canvas = document.getElementById('photoBorder');
-        AppJS.params.imgL = canvas.width / 2 - AppJS.params.imgW / 2;
-        AppJS.params.imgT = canvas.height / 2 - AppJS.params.imgH / 2;
-    },
-
     saveImg: function (canvas) {
         let saveBtn = document.querySelector('.js-save');
         let imgUrl = canvas.toDataURL('image/png');
@@ -58,16 +51,18 @@ let AppJS = {
     },
 
     scaling: function (sign) {
+        let oldWidth = AppJS.params.imgW;
+        let oldHeight = AppJS.params.imgH;
         if (sign === 'plus') {
-            AppJS.params.imgW += 10;
-            AppJS.params.imgH += 10;
-            AppJS.params.imgL -= 5;
-            AppJS.params.imgT -= 5;
+            AppJS.params.imgW += 20;
+            AppJS.params.imgL -= 10;
+            AppJS.params.imgH = AppJS.params.imgW * oldHeight / oldWidth;
+            AppJS.params.imgT -= (AppJS.params.imgH - oldHeight) / 2;
         } else if (sign === 'minus') {
-            AppJS.params.imgW -= 10;
-            AppJS.params.imgH -= 10;
-            AppJS.params.imgL += 5;
-            AppJS.params.imgT += 5;
+            AppJS.params.imgW -= 20;
+            AppJS.params.imgL += 10;
+            AppJS.params.imgH = AppJS.params.imgW * oldHeight / oldWidth;
+            AppJS.params.imgT -= (AppJS.params.imgH - oldHeight) / 2;
         }
         AppJS.renderCanvas();
     },
@@ -116,10 +111,8 @@ let AppJS = {
     renderCanvas: function (isInit, rotateA) {
         let canvas = document.getElementById('photoBorder');
         let ctx = canvas.getContext('2d');
-
         let cW = canvas.width;
         let cH = canvas.height;
-
         let rectL = AppJS.params.imgL;
         let rectT = AppJS.params.imgT;
 
@@ -128,29 +121,27 @@ let AppJS = {
         // }
 
         let photo = new Image();
+        let border = new Image();
+        photo.src = AppJS.params.imgSrc;
+        border.src = "img/border.png";
+
         photo.onload = function() {
             ctx.clearRect(0, 0, cW, cH);
-            // ctx.fillStyle = '#fff';
-            // ctx.fillRect(0, 0, cW, cH);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(20, 20, cW - 40, cH - 40);
             if (isInit === 'init') {
-                AppJS.calcParams(photo, cW, cH);
+                AppJS.calcParams(photo, cW, cH, ctx, canvas);
+                let border = new Image();
+                border.onload = function() { ctx.drawImage(border, 0, 0, cW, cH); };
+            } else {
+                ctx.drawImage(photo, rectL, rectT, AppJS.params.imgW, AppJS.params.imgH);
             }
-            ctx.drawImage(photo, rectL, rectT, AppJS.params.imgW, AppJS.params.imgH);
-
-            ctx.fillStyle = '#000';
-            ctx.fillRect(200, 400, 100, 50);
         };
-        photo.src = AppJS.params.imgSrc;
-
-        let border = new Image();
-        border.onload = function() {
-            ctx.drawImage(border, 0, 0, cW, cH);
-        };
-        border.src = "img/border.png";
+        border.onload = function() { ctx.drawImage(border, 0, 0, cW, cH); };
         AppJS.saveImg(canvas);
     },
 
-    calcParams: function (photo, cW, cH) {
+    calcParams: function (photo, cW, cH, ctx, canvas) {
         let width =  photo.width;
         let height = photo.height;
         let wProp = width  / cW;
@@ -162,6 +153,9 @@ let AppJS = {
             AppJS.params.imgW = width * cH / height;
             AppJS.params.imgH = cH;
         }
+        AppJS.params.imgL = canvas.width / 2 - AppJS.params.imgW / 2;
+        AppJS.params.imgT = canvas.height / 2 - AppJS.params.imgH / 2;
+        ctx.drawImage(photo, AppJS.params.imgL, AppJS.params.imgT, AppJS.params.imgW, AppJS.params.imgH);
     },
 };
 
