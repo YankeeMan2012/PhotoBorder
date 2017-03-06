@@ -3,24 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>PhotoBorder</title>
-
     <link rel="stylesheet" href="css/photo.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
 </head>
 <body>
-<a download="photo" class="saveBtn js-save">Save</a>
-<input type="file" class="js-file">
-<canvas height='750' width='500' id="photoBorder"></canvas>
 
+<div class="container">
+    <canvas height='1500' width='1000' id="photoBorder"></canvas>
+    <div class="borderControls">
+        <label class="addPhoto">
+            Загрузите фотографию
+            <input type="file" class="js-file">
+        </label>
+        <div class="border">
+            <span>Выберите рамку</span>
+            <span class="radio">
+                <input name="orientation" type="radio" id="vertical" checked value="vertical">
+                <label for="vertical">Вертикально</label>
+                <input name="orientation" type="radio" id="horizontal" value="horizontal">
+                <label for="horizontal">Горизонтально</label>
+            </span>
+        </div>
+        <ul class="borderBox">
+            <li class="borderItem checked" data-img="img/borders/border.png" style="background: url('img/borders/border.png') center center / contain no-repeat"></li>
+            <li class="borderItem" data-img="img/borders/border2.png" style="background: url('img/borders/border2.png') center center / contain no-repeat"></li>
+            <li class="borderItem" data-img="img/borders/border3.png" style="background: url('img/borders/border3.png') center center / contain no-repeat"></li>
+            <li class="borderItem" data-img="img/borders/border4.png" style="background: url('img/borders/border4.png') center center / contain no-repeat"></li>
+        </ul>
 
-<div class="controls">
-    <button class="js-plus">+</button>
-    <button class="js-minus">-</button>
+        <div class="size">
+            <div class="label">
+                <span>Размер</span>
+                <div class="reset">Сбросить настройки</div>
+            </div>
+            <div class="sizePoint">
+                <a class="" href="#"></a>
+            </div>
+        </div>
+        <a download="photo" class="saveBtn js-save">Сохранить</a>
+    </div>
 </div>
-<div class="controls">
-    <button class="js-clockwise">></button>
-    <button class="js-anticlockwise"><</button>
-</div>
 
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
