@@ -79,7 +79,7 @@ var AppJS = {
         border.addClass('checked');
         var borderSrc = border.attr('data-img');
         AppJS.params.borderSrc = borderSrc;
-        AppJS.renderCanvas();
+        AppJS.renderCanvas('init');
         AppJS.saveImg();
     },
 
