@@ -10,7 +10,7 @@ var AppJS = {
         imgL: 0,
         imgT: 0,
         sizeOld: 50,
-        borderSrc: "img/borders/border.png"
+        borderSrc: "img/borders/vertical/border.png"
     },
 
     init: function () {
@@ -26,7 +26,7 @@ var AppJS = {
             slide: function(event, ui) {
                 AppJS.scaling(ui.value);
             },
-            change: function(event, ui) {
+            change: function() {
                 AppJS.saveImg();
             }
         });
@@ -34,10 +34,6 @@ var AppJS = {
 
     handlers: function () {
         var canvas                  = document.getElementById('photoBorder');
-        var plus                    = document.querySelector('.js-plus');
-        var minus                   = document.querySelector('.js-minus');
-        var clockwise               = document.querySelector('.js-clockwise');
-        var anticlockwise           = document.querySelector('.js-anticlockwise');
         var photo                   = document.querySelector('.js-file');
         canvas.onmousedown          = function (e){ AppJS.startMoving(e, this); };
         photo.onchange              = function (e){ AppJS.loadImg(e, this); };
@@ -48,13 +44,22 @@ var AppJS = {
 
     orientation: function (val) {
         var photo = $('#photoBorder');
+        var vertical = $('.vertical');
+        var horizontal = $('.horizontal');
         if (val === 'vertical') {
             photo.attr({'width': 1000, 'height': 1500});
-            photo.css('margin-left', '-700px');
+            photo.removeClass('horizontalCanvas');
+            vertical.show();
+            horizontal.hide();
+            vertical.eq(0).click();
         } else {
             photo.attr({'width': 1500, 'height': 1000});
-            photo.css('margin-left', '-1000px');
+            photo.addClass('horizontalCanvas');
+            vertical.hide();
+            horizontal.show();
+            horizontal.eq(0).click();
         }
+        
         $(".sizePoint").slider("value", [50]);
         AppJS.renderCanvas('init');
         AppJS.saveImg();
@@ -77,8 +82,7 @@ var AppJS = {
     choiceBorder: function (border) {
         border.siblings('.checked').removeClass('checked');
         border.addClass('checked');
-        var borderSrc = border.attr('data-img');
-        AppJS.params.borderSrc = borderSrc;
+        AppJS.params.borderSrc = border.attr('data-img');
         AppJS.renderCanvas('init');
         AppJS.saveImg();
     },
@@ -103,16 +107,15 @@ var AppJS = {
         var oldWidth = AppJS.params.imgW;
         var oldHeight = AppJS.params.imgH;
         if (val > AppJS.params.sizeOld) {
-            AppJS.params.imgW += 30;
-            AppJS.params.imgL -= 15;
-            AppJS.params.imgH = AppJS.params.imgW * oldHeight / oldWidth;
-            AppJS.params.imgT -= (AppJS.params.imgH - oldHeight) / 2;
+            AppJS.params.imgW += 60;
+            AppJS.params.imgL -= 30;
         } else {
-            AppJS.params.imgW -= 30;
-            AppJS.params.imgL += 15;
-            AppJS.params.imgH = AppJS.params.imgW * oldHeight / oldWidth;
-            AppJS.params.imgT -= (AppJS.params.imgH - oldHeight) / 2;
+            AppJS.params.imgW -= 60;
+            AppJS.params.imgL += 30;
         }
+        AppJS.params.imgH = AppJS.params.imgW * oldHeight / oldWidth;
+        AppJS.params.imgT -= (AppJS.params.imgH - oldHeight) / 2;
+
         AppJS.params.sizeOld = val;
         AppJS.renderCanvas();
     },
@@ -122,7 +125,7 @@ var AppJS = {
             x: e.offsetX,
             y: e.offsetY,
             imgLStart: AppJS.params.imgL,
-            imgTStart: AppJS.params.imgT,
+            imgTStart: AppJS.params.imgT
         };
         border.onmousemove = function (e) {
             AppJS.moving(e, dragStartObj);
@@ -169,33 +172,48 @@ var AppJS = {
             ctx.fillStyle = '#fff';
             ctx.fillRect(20, 20, cW - 40, cH - 40);
             if (isInit === 'init') {
-                AppJS.calcParams(photo, cW, cH, ctx, canvas);
+                // AppJS.calcParams(photo, cW, cH, ctx, canvas);
+
+                var width =  photo.width;
+                var height = photo.height;
+                var wProp = width  / cW;
+                var hProp = height / cH;
+                if (wProp > hProp) {
+                    AppJS.params.imgW = cW;
+                    AppJS.params.imgH = height * cW / width;
+                } else {
+                    AppJS.params.imgW = width * cH / height;
+                    AppJS.params.imgH = cH;
+                }
+                AppJS.params.imgL = canvas.width / 2 - AppJS.params.imgW / 2;
+                AppJS.params.imgT = canvas.height / 2 - AppJS.params.imgH / 2;
+                ctx.drawImage(photo, AppJS.params.imgL, AppJS.params.imgT, AppJS.params.imgW, AppJS.params.imgH);
+
                 var border = new Image();
                 border.onload = function() { ctx.drawImage(border, 0, 0, cW, cH); };
             } else {
                 ctx.drawImage(photo, rectL, rectT, AppJS.params.imgW, AppJS.params.imgH);
             }
-
         };
         border.onload = function() { ctx.drawImage(border, 0, 0, cW, cH); };
     },
 
-    calcParams: function (photo, cW, cH, ctx, canvas) {
-        var width =  photo.width;
-        var height = photo.height;
-        var wProp = width  / cW;
-        var hProp = height / cH;
-        if (wProp > hProp) {
-            AppJS.params.imgW = cW;
-            AppJS.params.imgH = height * cW / width;
-        } else {
-            AppJS.params.imgW = width * cH / height;
-            AppJS.params.imgH = cH;
-        }
-        AppJS.params.imgL = canvas.width / 2 - AppJS.params.imgW / 2;
-        AppJS.params.imgT = canvas.height / 2 - AppJS.params.imgH / 2;
-        ctx.drawImage(photo, AppJS.params.imgL, AppJS.params.imgT, AppJS.params.imgW, AppJS.params.imgH);
-    },
+    // calcParams: function (photo, cW, cH, ctx, canvas) {
+    //     var width =  photo.width;
+    //     var height = photo.height;
+    //     var wProp = width  / cW;
+    //     var hProp = height / cH;
+    //     if (wProp > hProp) {
+    //         AppJS.params.imgW = cW;
+    //         AppJS.params.imgH = height * cW / width;
+    //     } else {
+    //         AppJS.params.imgW = width * cH / height;
+    //         AppJS.params.imgH = cH;
+    //     }
+    //     AppJS.params.imgL = canvas.width / 2 - AppJS.params.imgW / 2;
+    //     AppJS.params.imgT = canvas.height / 2 - AppJS.params.imgH / 2;
+    //     ctx.drawImage(photo, AppJS.params.imgL, AppJS.params.imgT, AppJS.params.imgW, AppJS.params.imgH);
+    // }
 };
 
 

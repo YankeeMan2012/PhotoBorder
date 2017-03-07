@@ -69,6 +69,8 @@ table {
         -ms-transform-origin: 95% 50%;
             transform-origin: 95% 50%;
     margin-left: -700px; }
+    .container canvas.horizontalCanvas {
+      margin-left: -1000px; }
   .container .borderControls {
     margin-left: 100px;
     width: 400px; }
@@ -155,6 +157,8 @@ table {
         -ms-flex-pack: justify;
             justify-content: space-between;
     margin-bottom: 40px; }
+    .container .borderBox .horizontal {
+      display: none; }
     .container .borderBox .borderItem {
       width: 80px;
       height: 100px;
@@ -171,9 +175,9 @@ table {
         margin-top: -15px;
         margin-left: -15px;
         background: url("../img/icons/done.svg") center center/cover no-repeat; }
-  .container .size {
+  .container .photoSize {
     margin-bottom: 50px; }
-    .container .size .label {
+    .container .photoSize .label {
       display: -webkit-flex;
       display: -ms-flexbox;
       display: flex;
@@ -184,7 +188,7 @@ table {
           -ms-flex-pack: justify;
               justify-content: space-between;
       margin-bottom: 15px; }
-      .container .size .label .reset {
+      .container .photoSize .label .reset {
         color: #ef207b;
         border-bottom: 1px dashed #ef207b;
         cursor: pointer;
@@ -192,12 +196,12 @@ table {
            -moz-user-select: none;
             -ms-user-select: none;
                 user-select: none; }
-    .container .size .sizePoint {
+    .container .photoSize .sizePoint {
       width: 270px;
       height: 10px;
       border: 1px solid #cfc9d5;
       border-radius: 3px; }
-      .container .size .sizePoint .ui-slider-handle {
+      .container .photoSize .sizePoint .ui-slider-handle {
         width: 16px;
         height: 16px;
         top: -3px;
@@ -233,3 +237,22 @@ table {
       height: 18px;
       margin-top: -9px;
       background: url("../img/icons/download.svg") center center/cover no-repeat; }
+
+@media screen and (max-width: 1060px) {
+  .container {
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin-top: -1050px;
+    height: 1900px; }
+    .container canvas {
+      -webkit-transform-origin: 50% 98%;
+          -ms-transform-origin: 50% 98%;
+              transform-origin: 50% 98%;
+      margin-left: 0 !important; }
+      .container canvas.horizontalCanvas {
+        margin-top: 200px; }
+    .container .borderControls {
+      margin: 0; }
+      .container .borderControls .addPhoto, .container .borderControls .borderBox, .container .borderControls .photoSize {
+        margin-bottom: 15px; } }

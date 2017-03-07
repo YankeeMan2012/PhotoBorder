@@ -15,6 +15,9 @@
 		cursor: move;
 		transform-origin: 95% 50%;
 		margin-left: -700px;
+		&.horizontalCanvas {
+			margin-left: -1000px;
+		}
 	}
 	.borderControls {
 		margin-left: 100px;
@@ -97,6 +100,9 @@
 		flex-direction: row;
 		justify-content: space-between;
 		margin-bottom: 40px;
+		.horizontal {
+			display: none;
+		}
 		.borderItem {
 			width: 80px;
 			height: 100px;
@@ -118,7 +124,7 @@
 			}
 		}
 	}
-	.size {
+	.photoSize {
 		margin-bottom: 50px;
 		.label {
 			display: flex;
@@ -173,6 +179,28 @@
 			height: 18px;
 			margin-top: -9px;
 			background: url("../img/icons/download.svg") center center / cover no-repeat;
+		}
+	}
+}
+
+
+@media screen and (max-width: 1060px) {
+	.container {
+		flex-direction: column;
+		margin-top: -1050px;
+		height: 1900px;
+		canvas {
+			transform-origin: 50% 98%;
+			margin-left: 0 !important;
+			&.horizontalCanvas {
+				margin-top: 200px;
+			}
+		}
+		.borderControls {
+			margin: 0;
+			.addPhoto, .borderBox, .photoSize {
+				margin-bottom: 15px;
+			}
 		}
 	}
 }
