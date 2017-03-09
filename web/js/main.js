@@ -4,7 +4,7 @@ window.onload  = function () {
 
 var AppJS = {
     params: {
-        imgSrc: 'img/emptyImg.jpg',
+        imgSrc: 'img/emptyImgWhite.jpg',
         imgW: 500,
         imgH: 500,
         imgL: 0,
